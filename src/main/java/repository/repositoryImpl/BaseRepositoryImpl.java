@@ -16,26 +16,24 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
     public abstract String getClassName();
 
     @Override
-    public boolean create(T t) {
+    public Optional<T> create(T t) {
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(t);
             entityManager.getTransaction().commit();
-            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return Optional.of(t);
 
     }
 
     @Override
-    public Optional<T> read(T id) {
+    public Optional<T> read(int id) {
         T t = entityManager.find(getEntityClass(), id);
         if (t != null) {
             return Optional.of(t);
-
         } else {
             return Optional.empty();
         }

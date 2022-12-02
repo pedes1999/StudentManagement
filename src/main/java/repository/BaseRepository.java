@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface BaseRepository<T> {
     
-    boolean create(T t);
-    Optional<T> read (T id);
+    Optional<T> create(T t);
+    Optional<T> read(int id);
     List<T> read();
     boolean delete(T t);
 }

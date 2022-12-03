@@ -1,6 +1,6 @@
 package gr.ed.studentmanagement;
 
-import domain.Student;
+import forms.LoginForm;
 import gr.ed.studentmanagement.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
@@ -11,10 +11,14 @@ import repository.StudentRepository;
 import repository.repositoryImpl.CourseRepositoryImpl;
 import repository.repositoryImpl.ProfessorRepositoryImpl;
 import repository.repositoryImpl.StudentRepositoryImpl;
+import service.ProfessorService;
 import service.StudentService;
+import service.serviceImpl.ProfessorServiceImpl;
 import service.serviceImpl.StudentServiceImpl;
+import util.DataImport;
 
 public class StudentManagement {
+
     private static final Logger logger = LoggerFactory.getLogger(StudentManagement.class);
 
     public static void main(String[] args) {
@@ -23,12 +27,13 @@ public class StudentManagement {
         ProfessorRepository profRepo = new ProfessorRepositoryImpl(entityManager);
         CourseRepository courseRepo = new CourseRepositoryImpl(entityManager);
         StudentService studentService = new StudentServiceImpl(studentRepo);
+        ProfessorService profService = new ProfessorServiceImpl(profRepo);
+        DataImport di = new DataImport(studentService,profService);
         
-        Student s = new Student();
-        s.setStudentFirstName("asd");
-        s.setStudentLastName("sds");
-        studentService.add(s);
-        
-        System.out.println(studentService.findAll());
+        //di.insertStudents();
+       // di.insertProfessors();
+//       LoginForm lf = new LoginForm(entityManager);
+//       lf.setVisible(true);
+       
     }
 }

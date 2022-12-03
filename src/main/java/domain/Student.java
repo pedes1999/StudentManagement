@@ -23,19 +23,22 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int studentId;
     
-    @Column(nullable = false,length = 20)
+    @Column(name = "fname",nullable = false,length = 20)
     private String studentFirstName;
     
-    @Column(nullable = false,length = 20)
+    @Column(name = "lname", nullable = false,length = 20)
     private String studentLastName;
     
+    @Column(name = "DOB")
     private LocalDate studentDateOfBirth;
+    
+    @Column(name = "address", nullable = false,length = 50)
     private String studentAddress;
     
     @OneToMany(mappedBy = "courseStudent")
     private List<Course> courseList;
     
-    @Column(columnDefinition = "enum('MALE','FEMALE')")
+    @Column(name = "gender",columnDefinition = "enum('MALE','FEMALE')")
     @Enumerated(EnumType.STRING)
     private Gender studentSex;
 }

@@ -1,8 +1,9 @@
 package repository.repositoryImpl;
 
-import domain.Course;
 import domain.Student;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import java.util.Optional;
 import repository.StudentRepository;
 
 public class StudentRepositoryImpl extends BaseRepositoryImpl<Student> implements StudentRepository {
@@ -12,13 +13,71 @@ public class StudentRepositoryImpl extends BaseRepositoryImpl<Student> implement
     }
 
     @Override
-    public boolean updateStudentFistName(Integer studentId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Student updateStudentFirstName(Integer studentId, String fname) {
+        Optional<Student> student = read(studentId);
+        if (student.isPresent()) {
+            try {
+                Student student2 = student.get();
+                student2.setStudentFirstName(fname);
+                entityManager.getTransaction().begin();
+                entityManager.merge(student2);
+                entityManager.getTransaction().commit();
+                return student2;
+            } catch (Exception e) {
+                logger.warn("Something went wrong with updating!!");
+            }
+        } else {
+            logger.warn("There is no student with this id! " + studentId);
+        }
+        return null;
     }
 
     @Override
-    public boolean updateStudentLastName(Integer studentId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Student updateStudentLastName(Integer studentId, String lname) {
+        Optional<Student> student = read(studentId);
+        if (student.isPresent()) {
+            try {
+                Student student2 = student.get();
+                student2.setStudentLastName(lname);
+                entityManager.getTransaction().begin();
+                entityManager.merge(student2);
+                entityManager.getTransaction().commit();
+                return student2;
+            } catch (Exception e) {
+                logger.warn("Something went wrong with updating!!");
+            }
+
+        } else {
+            logger.warn("There is no student with this id! " + studentId);
+
+        }
+        return null;
+    }
+
+    @Override
+    public Optional<Student> readStudentByFirstName(String fname) {
+        String nameQuery = "Select * from student where fname = ?";
+        Query sqlQuery = entityManager.createNativeQuery(nameQuery, Student.class);
+        sqlQuery.setParameter(1, fname);
+        try {
+            Student s = (Student) sqlQuery.getSingleResult();
+            return Optional.of(s);
+        } catch (Exception NoResultException) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Student> readStudentByLastName(String lname) {
+        String nameQuery = "Select * from student where lname = ?";
+        Query sqlQuery = entityManager.createNativeQuery(nameQuery, Student.class);
+        sqlQuery.setParameter(1, lname);
+        try {
+            Student s = (Student) sqlQuery.getSingleResult();
+            return Optional.of(s);
+        } catch (Exception NoResultException) {
+            return Optional.empty();
+        }
     }
 
     @Override

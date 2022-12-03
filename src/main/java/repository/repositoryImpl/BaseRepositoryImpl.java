@@ -1,12 +1,15 @@
 package repository.repositoryImpl;
 
+import gr.ed.studentmanagement.StudentManagement;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repository.BaseRepository;
 
 public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
-
+static final Logger logger = LoggerFactory.getLogger(BaseRepository.class);
     protected EntityManager entityManager;
 
     public BaseRepositoryImpl(EntityManager entityManager) {
@@ -45,15 +48,14 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
     }
 
     @Override
-    public boolean delete(Object t) {
-        Object o = entityManager.find(Object.class, t);
+    public boolean delete(T t) {
         try {
             entityManager.getTransaction().begin();
             entityManager.remove(t);
             entityManager.getTransaction().commit();
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Something went wrong with deleting entity " + t ,e);
             return false;
         }
 

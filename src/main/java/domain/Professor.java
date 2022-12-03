@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,13 +20,16 @@ public class Professor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int professorId;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "fname" ,nullable = false, length = 20)
     private String profFirstName;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "lname" ,nullable = false, length = 20)
     private String profLastName;
-
-    private Integer profDateOfBirth;
+    
+    @Column(name = "DOB" ,nullable = false)
+    private LocalDate profDateOfBirth;
+    
+    @Column(name = "address" ,nullable = false, length = 50)
     private String profAddress;
 
     @OneToMany(mappedBy = "courseProfessor", orphanRemoval = true)

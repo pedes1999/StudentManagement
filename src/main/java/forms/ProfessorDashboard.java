@@ -1,41 +1,32 @@
 package forms;
 
-import domain.Student;
-import enums.Gender;
+import domain.Professor;
 import gr.ed.studentmanagement.util.JpaUtil;
 import jakarta.persistence.EntityManager;
-import java.awt.event.ActionEvent;
-import static java.nio.file.Files.list;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import static java.util.Collections.list;
 import java.util.Date;
 import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import repository.StudentRepository;
-import repository.repositoryImpl.StudentRepositoryImpl;
-import service.StudentService;
-import service.serviceImpl.StudentServiceImpl;
+import repository.ProfessorRepository;
+import repository.repositoryImpl.ProfessorRepositoryImpl;
+import service.ProfessorService;
+import service.serviceImpl.ProfessorServiceImpl;
 
-public class Dashboard extends javax.swing.JFrame {
+public class ProfessorDashboard extends javax.swing.JFrame {
 
     EntityManager entityManager = JpaUtil.getEntityManager();
-    StudentRepository srr = new StudentRepositoryImpl(entityManager);
-    StudentService sr = new StudentServiceImpl(srr);
-    private static String QUERY_BASED_ON_LAST_NAME = "from student";
+    ProfessorRepository pr = new ProfessorRepositoryImpl(entityManager);
+    ProfessorService ps = new ProfessorServiceImpl(pr);
 
     /**
      * Creates new form Dashboard
      */
-    public Dashboard() {
+    public ProfessorDashboard() {
         initComponents();
         this.setLocationRelativeTo(null);
         changeStateOfButton(false);
@@ -43,17 +34,16 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     private void addToTable() {
-        Object[] columnNames = {"Id", "Fname", "Lname", "Dob", "Sex", "address"};
+        Object[] columnNames = {"Id", "Fname", "Lname", "Dob", "address"};
         DefaultTableModel model = new DefaultTableModel(new Object[0][0], columnNames);
-        List<Student> l = sr.findAll();
-        for (Student s : l) {
-            Object[] o = new Object[6];
-            o[0] = s.getStudentId();
-            o[1] = s.getStudentFirstName();
-            o[2] = s.getStudentLastName();
-            o[3] = s.getStudentDateOfBirth();
-            o[4] = s.getStudentSex();
-            o[5] = s.getStudentAddress();
+        List<Professor> l = ps.findAll();
+        for (Professor s : l) {
+            Object[] o = new Object[5];
+            o[0] = s.getProfessorId();
+            o[1] = s.getProfFirstName();
+            o[2] = s.getProfLastName();
+            o[3] = s.getProfDateOfBirth();
+            o[4] = s.getProfAddress();
 
             model.addRow(o);
 
@@ -68,7 +58,7 @@ public class Dashboard extends javax.swing.JFrame {
         edit.setEnabled(flag);
     }
 
-    public void filterStudents(String query) {
+    public void filterProfessors(String query) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
         jTable1.setRowSorter(sorter);
@@ -79,18 +69,6 @@ public class Dashboard extends javax.swing.JFrame {
 
         }
     }
-
-    Action action = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            TableCellListener tcl = (TableCellListener) e.getSource();
-            System.out.println("Row   : " + tcl.getRow());
-            System.out.println("Column: " + tcl.getColumn());
-            System.out.println("Old   : " + tcl.getOldValue());
-            System.out.println("New   : " + tcl.getNewValue());
-        }
-    };
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -104,11 +82,7 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         fname = new javax.swing.JLabel();
         fnametext = new javax.swing.JTextField();
-        lname = new javax.swing.JLabel();
         lnametext = new javax.swing.JTextField();
-        sex = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
         datePicker = new com.toedter.calendar.JCalendar();
         jLabel6 = new javax.swing.JLabel();
@@ -122,6 +96,8 @@ public class Dashboard extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         search = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        lname = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -132,27 +108,6 @@ public class Dashboard extends javax.swing.JFrame {
         fname.setForeground(new java.awt.Color(0, 0, 0));
         fname.setText("First Name :");
 
-        lname.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lname.setForeground(new java.awt.Color(0, 0, 0));
-        lname.setText("Last Name :");
-
-        sex.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        sex.setForeground(new java.awt.Color(0, 0, 0));
-        sex.setText("Sex :");
-
-        jRadioButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jRadioButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jRadioButton1.setText("Male");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
-            }
-        });
-
-        jRadioButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jRadioButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jRadioButton2.setText("Female");
-
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Birthdate  :");
@@ -161,7 +116,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Manage Students");
+        jLabel6.setText("Manage Professors");
 
         address.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         address.setForeground(new java.awt.Color(0, 0, 0));
@@ -250,17 +205,31 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(102, 153, 255));
+        jButton1.setText("<- BACK");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        lname.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lname.setForeground(new java.awt.Color(0, 0, 0));
+        lname.setText("Last Name :");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(520, 520, 520)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(391, 391, 391)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -268,30 +237,26 @@ public class Dashboard extends javax.swing.JFrame {
                                 .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(16, 16, 16))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(lname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(fname, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(fnametext)
-                                        .addComponent(lnametext, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)))
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(sex, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel5)
-                                        .addComponent(address))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jRadioButton1)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(jRadioButton2))
-                                        .addComponent(datePicker, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
-                                        .addComponent(adresstext)))))
-                        .addGap(69, 69, 69)
+                                .addGap(85, 85, 85))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(fname, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lname, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lnametext, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(fnametext, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(address)
+                                            .addComponent(jLabel5))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(adresstext, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -307,7 +272,9 @@ public class Dashboard extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(65, 65, 65)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fname)
@@ -315,32 +282,27 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchtext, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
+                .addGap(35, 35, 35)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lname)
-                            .addComponent(lnametext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(sex)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jRadioButton2))
-                        .addGap(40, 40, 40)
+                            .addComponent(lnametext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lname, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(58, 58, 58)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
-                            .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(49, 49, 49)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(address)
                             .addComponent(adresstext, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(69, 69, 69))
-                    .addComponent(jScrollPane1)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -353,15 +315,13 @@ public class Dashboard extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -372,15 +332,9 @@ public class Dashboard extends javax.swing.JFrame {
         String address = adresstext.getText().toLowerCase();
         Date date = datePicker.getDate();
         LocalDate localdate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Gender gender;
-        if (jRadioButton1.isSelected()) {
-            gender = Gender.MALE;
-        } else {
-            gender = Gender.FEMALE;
-        }
-        Student s = new Student(fname, lname, localdate, address, gender);
+        Professor s = new Professor(fname, lname, localdate, address);
 
-        sr.updateStudent(id, s);
+        ps.updateProfessor(id, s);
         addToTable();
     }//GEN-LAST:event_editActionPerformed
 
@@ -391,23 +345,13 @@ public class Dashboard extends javax.swing.JFrame {
         String address = adresstext.getText().toLowerCase();
         Date date = datePicker.getDate();
         LocalDate ld = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Gender sexs;
-        if (jRadioButton1.isSelected()) {
-            sexs = Gender.MALE;
-        } else {
-            sexs = Gender.FEMALE;
-        }
 
         if (fname.trim().equals("") || lname.trim().equals("") || address.equals("")) {
             JOptionPane.showMessageDialog(null, "Please enter all fields correctly", "Empty fields!!", 0);
         } else {
-            Student s = new Student();
-            s.setStudentFirstName(fname);
-            s.setStudentLastName(lname);
-            s.setStudentSex(sexs);
-            s.setStudentDateOfBirth(ld);
-            s.setStudentAddress(address);
-            sr.add(s);
+            Professor p = new Professor(fname, lname, ld, address);
+
+            ps.add(p);
             addToTable();
         }
 
@@ -418,15 +362,19 @@ public class Dashboard extends javax.swing.JFrame {
         int selectedRowIndex = jTable1.getSelectedRow();
         Integer id = (Integer) jTable1.getValueAt(selectedRowIndex, 0);
         System.out.println(id);
-        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete Student with id : " + id, "Delete Student", JOptionPane.YES_NO_OPTION,
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete Professor with id : " + id, "Delete Professor", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
             try {
-            sr.deleteById(id);
-            } catch(Exception ignore) {
+                ps.deleteById(id); 
+                JOptionPane.showMessageDialog(null, "Professor with id : " + id  + " deleted Successfully!!", "Empty fields!!", 1);
+                addToTable();
+            } catch (Exception ignore) {
+                addToTable();
             }
+         
         }
-        addToTable();
+       
     }//GEN-LAST:event_deleteActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -435,17 +383,9 @@ public class Dashboard extends javax.swing.JFrame {
         int selectedRowIndex = jTable1.getSelectedRow();
         Integer id = (Integer) jTable1.getValueAt(selectedRowIndex, 0);
         System.out.println(id);
-        Gender gender = sr.findById(id).get().getStudentSex();
-        if (gender.equals(Gender.MALE)) {
-            jRadioButton1.setSelected(true);
-            jRadioButton2.setSelected(false);
-        } else {
-            jRadioButton2.setSelected(true);
-            jRadioButton1.setSelected(false);
-        }
-        fnametext.setText(sr.findById(id).get().getStudentFirstName());
-        lnametext.setText(sr.findById(id).get().getStudentLastName());
-        adresstext.setText(sr.findById(id).get().getStudentAddress());
+        fnametext.setText(ps.findById(id).get().getProfFirstName());
+        lnametext.setText(ps.findById(id).get().getProfLastName());
+        adresstext.setText(ps.findById(id).get().getProfAddress());
         LocalDate datePickerSelected = (LocalDate) jTable1.getValueAt(selectedRowIndex, 3);
         Date dateSelected = Date.from(datePickerSelected.atStartOfDay().toInstant(ZoneOffset.UTC));
         datePicker.setDate(dateSelected);
@@ -456,9 +396,16 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_searchtextKeyReleased
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-        String query = searchtext.getText();
-        filterStudents(query);
+        String query = searchtext.getText().toLowerCase();
+        filterProfessors(query);
     }//GEN-LAST:event_searchActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ChooseForm cf = new ChooseForm();
+        cf.setVisible(true);
+
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -472,20 +419,23 @@ public class Dashboard extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfessorDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfessorDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfessorDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProfessorDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Dashboard().setVisible(true);
+                new ProfessorDashboard().setVisible(true);
 
             }
         });
@@ -500,18 +450,16 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton edit;
     private javax.swing.JLabel fname;
     private javax.swing.JTextField fnametext;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lname;
     private javax.swing.JTextField lnametext;
     private javax.swing.JButton search;
     private javax.swing.JTextField searchtext;
-    private javax.swing.JLabel sex;
     // End of variables declaration//GEN-END:variables
 }

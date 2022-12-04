@@ -8,8 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Course {
     @Id
@@ -27,6 +29,15 @@ public class Course {
     
     private LocalDate startDate;
     private LocalDate endDate;
+
+    public Course(String courseName, Professor courseProfessor, LocalDate startDate, LocalDate endDate) {
+        this.courseName = courseName;
+        this.courseProfessor = courseProfessor;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+    
+    
     
     
 }

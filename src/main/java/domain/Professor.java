@@ -32,7 +32,16 @@ public class Professor {
     @Column(name = "address" ,nullable = false, length = 50)
     private String profAddress;
 
-    @OneToMany(mappedBy = "courseProfessor", orphanRemoval = true)
+    @OneToMany(mappedBy = "courseProfessor",orphanRemoval = true)
     private List<Course> ProfessorTeaches;
+
+    public Professor(String profFirstName, String profLastName, LocalDate profDateOfBirth, String profAddress) {
+        this.profFirstName = profFirstName;
+        this.profLastName = profLastName;
+        this.profDateOfBirth = profDateOfBirth;
+        this.profAddress = profAddress;
+    }
+    
+    
 
 }

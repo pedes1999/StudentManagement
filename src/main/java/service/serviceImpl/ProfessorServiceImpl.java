@@ -1,6 +1,7 @@
 package service.serviceImpl;
 
 import domain.Professor;
+import domain.Student;
 import exceptions.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.ProfessorRepository;
 import service.ProfessorService;
+import static service.serviceImpl.StudentServiceImpl.logger;
 
 public class ProfessorServiceImpl implements ProfessorService {
 
@@ -99,6 +101,17 @@ public class ProfessorServiceImpl implements ProfessorService {
             logger.warn("Something went wrong with finding a professor", e);
         }
         return null;
+    }
+    
+     @Override
+    public boolean updateProfessor(int id, Professor newProfessor) {
+        try {
+            profRepo.updateProfessor(id, newProfessor);
+            return true;
+        }  catch (Exception e) {
+            logger.warn("Something went wrong with updating professor : " + id);
+            return false;
+        }
     }
 
 }

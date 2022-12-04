@@ -1,6 +1,5 @@
 package repository.repositoryImpl;
 
-import domain.Course;
 import domain.Professor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -8,7 +7,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.ProfessorRepository;
-import service.serviceImpl.StudentServiceImpl;
 
 public class ProfessorRepositoryImpl extends BaseRepositoryImpl<Professor> implements ProfessorRepository {
 
@@ -64,6 +62,28 @@ public class ProfessorRepositoryImpl extends BaseRepositoryImpl<Professor> imple
             logger.warn("There are no professors with this last name");
             return Optional.empty();
         }
+    }
+
+   @Override
+    public Professor updateProfessor(Integer id, Professor newProfessor) {
+        Optional<Professor> prof  = read(id);
+       
+        if (prof.isPresent()) {
+            try {
+            Professor prof2 = prof.get();
+            prof2.setProfFirstName(newProfessor.getProfFirstName());
+            prof2.setProfLastName(newProfessor.getProfLastName());
+            prof2.setProfDateOfBirth(newProfessor.getProfDateOfBirth());
+            prof2.setProfAddress(newProfessor.getProfAddress());
+            entityManager.getTransaction().begin();
+            entityManager.merge(prof2);
+            entityManager.getTransaction().commit();
+            } catch (Exception e) {
+                logger.warn("Something went wrong with updates",e);
+            }
+
+        }
+        return prof.get();
     }
 
 }

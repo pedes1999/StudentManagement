@@ -2,6 +2,7 @@ package repository.repositoryImpl;
 
 import domain.Course;
 import jakarta.persistence.EntityManager;
+import java.util.Optional;
 import repository.CourseRepository;
 
 public class CourseRepositoryImpl extends BaseRepositoryImpl<Course> implements CourseRepository {
@@ -23,6 +24,28 @@ public class CourseRepositoryImpl extends BaseRepositoryImpl<Course> implements 
     @Override
     public String getClassName() {
         return Course.class.getName();
+    }
+
+    @Override
+    public Course updateCourse(Integer id, Course newCourse) {
+        Optional<Course> course  = read(id);
+       
+        if (course.isPresent()) {
+            try {
+            Course course2 = course.get();
+            course2.setCourseName(newCourse.getCourseName());
+            course2.setStartDate(newCourse.getStartDate());
+            course2.setEndDate(newCourse.getEndDate());
+            course2.setCourseProfessor(newCourse.getCourseProfessor());
+            entityManager.getTransaction().begin();
+            entityManager.merge(course2);
+            entityManager.getTransaction().commit();
+            } catch (Exception e) {
+                logger.warn("Something went wrong with updates",e);
+            }
+
+        }
+        return course.get();
     }
 
 }

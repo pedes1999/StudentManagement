@@ -11,15 +11,7 @@ import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import repository.StudentRepository;
-import repository.repositoryImpl.StudentRepositoryImpl;
-import service.StudentService;
-import service.serviceImpl.StudentServiceImpl;
 
-/**
- *
- * @author pnbdr
- */
 public class LoginForm extends javax.swing.JFrame {
 
     EntityManager entityManager = JpaUtil.getEntityManager();
@@ -187,8 +179,8 @@ public class LoginForm extends javax.swing.JFrame {
             List l = sqlQuery.getResultList();
 
             if (!l.isEmpty()) {
-                Dashboard db = new Dashboard();
-                db.setVisible(true);
+                ChooseForm cf = new ChooseForm();
+                cf.setVisible(true);
                 
                 this.dispose();
                 

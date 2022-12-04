@@ -11,8 +11,10 @@ import repository.StudentRepository;
 import repository.repositoryImpl.CourseRepositoryImpl;
 import repository.repositoryImpl.ProfessorRepositoryImpl;
 import repository.repositoryImpl.StudentRepositoryImpl;
+import service.CourseService;
 import service.ProfessorService;
 import service.StudentService;
+import service.serviceImpl.CourseServiceImpl;
 import service.serviceImpl.ProfessorServiceImpl;
 import service.serviceImpl.StudentServiceImpl;
 import util.DataImport;
@@ -26,14 +28,22 @@ public class StudentManagement {
         StudentRepository studentRepo = new StudentRepositoryImpl(entityManager);
         ProfessorRepository profRepo = new ProfessorRepositoryImpl(entityManager);
         CourseRepository courseRepo = new CourseRepositoryImpl(entityManager);
+        
+        
         StudentService studentService = new StudentServiceImpl(studentRepo);
         ProfessorService profService = new ProfessorServiceImpl(profRepo);
-        DataImport di = new DataImport(studentService,profService);
+        CourseService courseService = new CourseServiceImpl(courseRepo);
         
+        DataImport di = new DataImport(studentService,profService,courseService);
+        
+        
+//        
         di.insertStudents();
         di.insertProfessors();
-//       LoginForm lf = new LoginForm(entityManager);
-//       lf.setVisible(true);
+        di.insertCourses();
+//        
+        LoginForm lf = new LoginForm();
+        lf.setVisible(true);
        
     }
 }

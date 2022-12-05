@@ -30,7 +30,6 @@ public class StudentDashboard extends javax.swing.JFrame {
     EntityManager entityManager = JpaUtil.getEntityManager();
     StudentRepository srr = new StudentRepositoryImpl(entityManager);
     StudentService sr = new StudentServiceImpl(srr);
-    private static String QUERY_BASED_ON_LAST_NAME = "from student";
 
     /**
      * Creates new form Dashboard
@@ -79,18 +78,6 @@ public class StudentDashboard extends javax.swing.JFrame {
 
         }
     }
-
-    Action action = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            TableCellListener tcl = (TableCellListener) e.getSource();
-            System.out.println("Row   : " + tcl.getRow());
-            System.out.println("Column: " + tcl.getColumn());
-            System.out.println("Old   : " + tcl.getOldValue());
-            System.out.println("New   : " + tcl.getNewValue());
-        }
-    };
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -153,6 +140,11 @@ public class StudentDashboard extends javax.swing.JFrame {
         jRadioButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jRadioButton2.setForeground(new java.awt.Color(0, 0, 0));
         jRadioButton2.setText("Female");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
@@ -373,7 +365,8 @@ public class StudentDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
+        jRadioButton1.setSelected(true);
+        jRadioButton2.setSelected(false);
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
@@ -427,16 +420,17 @@ public class StudentDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_addActionPerformed
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int selectedRowIndex = jTable1.getSelectedRow();
         Integer id = (Integer) jTable1.getValueAt(selectedRowIndex, 0);
-        System.out.println(id);
+        if(selectedRowIndex == -1){
+            JOptionPane.showMessageDialog(null, "Please choose a student to delete!!!", "Empty Student", 0);
+        }
         int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete Student with id : " + id, "Delete Student", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
             try {
-            sr.deleteById(id);
-            } catch(Exception ignore) {
+                sr.deleteById(id);
+            } catch (Exception ignore) {
             }
         }
         addToTable();
@@ -444,7 +438,6 @@ public class StudentDashboard extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         changeStateOfButton(true);
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int selectedRowIndex = jTable1.getSelectedRow();
         Integer id = (Integer) jTable1.getValueAt(selectedRowIndex, 0);
         System.out.println(id);
@@ -476,9 +469,14 @@ public class StudentDashboard extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ChooseForm cf = new ChooseForm();
         cf.setVisible(true);
-        
+
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        jRadioButton2.setSelected(true);
+        jRadioButton1.setSelected(false);
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     /**
      * @param args the command line arguments

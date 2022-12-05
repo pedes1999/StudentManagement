@@ -356,7 +356,7 @@ public class CourseDashboard extends javax.swing.JFrame {
         String name = crsName.getText().toLowerCase();
         Date startDate = datePicker1.getDate();
         LocalDate sDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Date endDate = datePicker1.getDate();
+        Date endDate = datePicker.getDate();
         LocalDate eDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Integer profId = (Integer) prof.getValue();
         Optional<Professor> p = profService.findById(profId);
@@ -364,6 +364,8 @@ public class CourseDashboard extends javax.swing.JFrame {
             Course s = new Course(name, p.get(), sDate, eDate);
             courseService.updateCourse(id, s);
             addToTable();
+        } else {
+            JOptionPane.showMessageDialog(null, "Please enter a valid professor id!", "Empty fields!!", 0);
         }
     }//GEN-LAST:event_editActionPerformed
 
